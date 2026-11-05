@@ -51,11 +51,13 @@ model in mind.
 Type:
 
 ```
-Yes, the data is at /opt/fm/data/shared/hls_burn_scars/training: 540 six-band HLS GeoTIFF chips (*_merged.tif) with burn masks (*.mask.tif: 1 burned, 0 not burned, -1 no data). Use Prithvi-EO-2.0-300M-TL with a frozen backbone and a UNet decoder. Success is burned-class IoU on held-out chips, with precision and recall alongside. One experiment only.
+Yes, the data is at /opt/fm/data/shared/hls_burn_scars/training: 540 six-band HLS GeoTIFF chips (*_merged.tif) with burn masks (*.mask.tif: 1 burned, 0 not burned, -1 no data). Use Prithvi-EO-2.0-300M-TL with a frozen backbone and the UperNet decoder from the official burn scars example. Success is burned-class IoU on held-out chips, with precision and recall alongside. One experiment only.
 ```
 
 - **Frozen backbone**: the pretrained Prithvi weights stay fixed and only the small decoder
   learns. It trains fast and fits a shared GPU.
+- **UperNet decoder**: the decoder NASA's official Prithvi burn scars example uses, so the
+  studio builds the training code from that example.
 - The agents check every claim against the files, so a wrong one is caught. A clear one
   saves questions.
 
@@ -125,13 +127,14 @@ you, for example `how many chips have no burned pixels at all?`, then click **go
 
 > **Which experiments should I plan?** *(asked by code)*
 >
-> 1. semanticsegmentation-prithvi_eo_v2_300_tl-unetdecoder-freeze_backbone (recommended)
+> 1. frozen-tl-upernet: Frozen Prithvi-EO-2.0-300M-TL with UperNet (recommended)
 > 2. ...
 
-Each name reads as *task - backbone - decoder - how it is trained*. Details and sources are
-in `stage3_models/shortlist.md`. Pick the one that matches step 3 (`prithvi_eo_v2_300_tl`,
-`unetdecoder`, `freeze_backbone`), usually the recommended one, then click the confirm
-button. Pick one only: every pick is a training run on the shared GPU.
+Details and sources are in `stage3_models/shortlist.md`. Pick the one that matches step 3
+(the 300M-TL backbone, frozen, with the UperNet decoder), usually the recommended one, then
+click **Plan the selected**. Pick one only: every pick is a training run on the shared GPU.
+If every candidate uses a UNet decoder, type
+`use the UperNet decoder from the official example instead`.
 
 ## 10. The plan
 
@@ -142,7 +145,10 @@ verifier checks it against the sources. This takes a few minutes. Then:
 > .pdf). Shall I build and run it? *(asked by code)*
 
 Read the plan, then click **go**. To change something, say so, for example
-`use UperNetDecoder instead`: it re-plans and asks again.
+`weight burned pixels more in the loss`: it re-plans and asks again.
+
+If the run stops with "no runnable configuration" or a decoder conflict, type
+`follow the official burn scars example as it is, with the UperNet decoder`.
 
 ## 11. The run
 
@@ -189,6 +195,7 @@ was measured, what it means and what to do next. Open **Artifacts** and click
 
 - Answer the interview from the other side (science or machine learning) and see how the
   questions change.
-- At step 10, ask for `UperNetDecoder` instead of the UNet decoder.
+- At step 10, ask for a different weighting of burned pixels in the loss, and compare the
+  scores with your first run.
 - Run the same steps on your own data, with a public link (see
   [Bringing your data](../README.md#4-bringing-your-data)).

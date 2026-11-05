@@ -51,13 +51,11 @@ model in mind.
 Type:
 
 ```
-Yes, the data is at /opt/fm/data/shared/hls_burn_scars/training: 540 six-band HLS GeoTIFF chips (*_merged.tif) with burn masks (*.mask.tif: 1 burned, 0 not burned, -1 no data). Use Prithvi-EO-2.0-300M-TL with a frozen backbone and the UperNet decoder from the official burn scars example. Success is burned-class IoU on held-out chips, with precision and recall alongside. One experiment only.
+Yes, the data is at /opt/fm/data/shared/hls_burn_scars/training: 540 six-band HLS GeoTIFF chips (*_merged.tif) with burn masks (*.mask.tif: 1 burned, 0 not burned, -1 no data). Success is burned-class IoU on held-out chips, with precision and recall alongside. One experiment only.
 ```
 
-- **Frozen backbone**: the pretrained Prithvi weights stay fixed and only the small decoder
-  learns. It trains fast and fits a shared GPU.
-- **UperNet decoder**: the decoder NASA's official Prithvi burn scars example uses, so the
-  studio builds the training code from that example.
+- No model named on purpose: picking one is the agents' job, and the shortlist in step 9
+  says why.
 - The agents check every claim against the files, so a wrong one is caught. A clear one
   saves questions.
 
@@ -127,14 +125,11 @@ you, for example `how many chips have no burned pixels at all?`, then click **go
 
 > **Which experiments should I plan?** *(asked by code)*
 >
-> 1. frozen-tl-upernet: Frozen Prithvi-EO-2.0-300M-TL with UperNet (recommended)
+> 1. ... (recommended)
 > 2. ...
 
-Details and sources are in `stage3_models/shortlist.md`. Pick the one that matches step 3
-(the 300M-TL backbone, frozen, with the UperNet decoder), usually the recommended one, then
+Details and sources are in `stage3_models/shortlist.md`. Pick the recommended one, then
 click **Plan the selected**. Pick one only: every pick is a training run on the shared GPU.
-If every candidate uses a UNet decoder, type
-`use the UperNet decoder from the official example instead`.
 
 ## 10. The plan
 
@@ -147,8 +142,8 @@ verifier checks it against the sources. This takes a few minutes. Then:
 Read the plan, then click **go**. To change something, say so, for example
 `weight burned pixels more in the loss`: it re-plans and asks again.
 
-If the run stops with "no runnable configuration" or a decoder conflict, type
-`follow the official burn scars example as it is, with the UperNet decoder`.
+If it stops with "no runnable configuration" or a conflict in the model's set-up, type
+`follow the official burn scars example as it is`.
 
 ## 11. The run
 
